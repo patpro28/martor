@@ -70,9 +70,9 @@
   {% endif %}
 
   {% if 'image-upload' in toolbar_buttons %}
-    <div class="markdown-selector markdown-image-upload" title="{% trans 'Upload an Image' %}">
+    <div class="markdown-selector markdown-image-upload relative" title="{% trans 'Upload an Image' %}">
       <i class="fa-solid fa-upload"></i>
-      <input name="markdown-image-upload" class="button" type="file" accept="image/*" title="{% trans 'Upload an Image' %}">
+      <input name="markdown-image-upload" class="opacity-0 absolute top-0 right-0" type="file" accept="image/*" title="{% trans 'Upload an Image' %}">
     </div>
   {% endif %}
 
@@ -90,7 +90,7 @@
 
   {% if 'toggle-maximize' in toolbar_buttons %}
     <div class="markdown-selector markdown-toggle-maximize" title="{% trans 'Full Screen' %}">
-      <i class="fa-solid fa-arrows-maximize"></i>
+      <i class="fa-solid fa-maximize"></i>
     </div>
   {% endif %}
 

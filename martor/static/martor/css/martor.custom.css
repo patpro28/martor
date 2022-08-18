@@ -1166,6 +1166,14 @@ video {
   position: relative;
 }
 
+.top-0 {
+  top: 0px;
+}
+
+.right-0 {
+  right: 0px;
+}
+
 .flex {
   display: flex;
 }
@@ -1218,6 +1226,10 @@ video {
 
 .italic {
   font-style: italic;
+}
+
+.opacity-0 {
+  opacity: 0;
 }
 
 .outline {
