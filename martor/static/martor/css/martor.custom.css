@@ -1190,6 +1190,10 @@ video {
   padding: 1rem;
 }
 
+.p-2 {
+  padding: 0.5rem;
+}
+
 .text-center {
   text-align: center;
 }
@@ -1209,6 +1213,21 @@ video {
   border-top-width: 2px;
   --tw-border-opacity: 1;
   border-top-color: rgb(191 219 254 / var(--tw-border-opacity));
+}
+
+.before\:mr-1::before {
+  content: var(--tw-content);
+  margin-right: 0.25rem;
+}
+
+.before\:mr-0\.5::before {
+  content: var(--tw-content);
+  margin-right: 0.125rem;
+}
+
+.before\:mr-0::before {
+  content: var(--tw-content);
+  margin-right: 0px;
 }
 
 .before\:font-awesome::before {
