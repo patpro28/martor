@@ -109,7 +109,7 @@ class MartorWidget(forms.Textarea):
             js_theme = MARTOR_ALTERNATIVE_JS_FILE_THEME
             js = (MARTOR_ALTERNATIVE_JS_FILE_THEME,).__add__(js)
         else:
-            if selected_theme != 'custom'
+            if selected_theme != 'custom':
                 js_theme = "plugins/js/%s.min.js" % selected_theme
                 js = (js_theme,).__add__(js)
 
