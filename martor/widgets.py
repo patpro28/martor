@@ -21,7 +21,7 @@ from .settings import (
 
 def get_theme():
     """function to get the selected theme"""
-    supported_themes = ["bootstrap", "semantic"]
+    supported_themes = ["bootstrap", "semantic", "custom"]
     if MARTOR_THEME in supported_themes:
         return MARTOR_THEME
     return "bootstrap"
@@ -100,16 +100,18 @@ class MartorWidget(forms.Textarea):
             css_theme = MARTOR_ALTERNATIVE_CSS_FILE_THEME
             css["all"] = (css_theme,).__add__(css.get("all"))
         else:
-            css_theme = "plugins/css/%s.min.css" % selected_theme
-            css["all"] = (css_theme,).__add__(css.get("all"))
+            if selected_theme != 'custom':
+                css_theme = "plugins/css/%s.min.css" % selected_theme
+                css["all"] = (css_theme,).__add__(css.get("all"))
 
         # 2. vendor js theme
         if MARTOR_ALTERNATIVE_JS_FILE_THEME:
             js_theme = MARTOR_ALTERNATIVE_JS_FILE_THEME
             js = (MARTOR_ALTERNATIVE_JS_FILE_THEME,).__add__(js)
         else:
-            js_theme = "plugins/js/%s.min.js" % selected_theme
-            js = (js_theme,).__add__(js)
+            if selected_theme != 'custom'
+                js_theme = "plugins/js/%s.min.js" % selected_theme
+                js = (js_theme,).__add__(js)
 
         # 3. vendor jQUery
         if MARTOR_ALTERNATIVE_JQUERY_JS_FILE:
