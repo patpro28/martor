@@ -1158,6 +1158,10 @@ video {
   position: static;
 }
 
+.absolute {
+  position: absolute;
+}
+
 .relative {
   position: relative;
 }
@@ -1168,6 +1172,10 @@ video {
 
 .table {
   display: table;
+}
+
+.hidden {
+  display: none;
 }
 
 .flex-1 {
@@ -1253,4 +1261,16 @@ video {
 .before\:content-\[\'\\f06e\'\]::before {
   --tw-content: '\f06e';
   content: var(--tw-content);
+}
+
+.group:hover .group-hover\:block {
+  display: block;
+}
+
+.\[\&\>\*\]\:p-1>* {
+  padding: 0.25rem;
+}
+
+.\[\&\>\*\]\:p-2>* {
+  padding: 0.5rem;
 }

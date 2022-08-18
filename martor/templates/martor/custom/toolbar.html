@@ -1,5 +1,5 @@
 {% load i18n %}
-<div class="flex-1 flex justify-end items-center martor-toolbar">
+<div class="flex-1 [&>*]:p-2 flex justify-end items-center martor-toolbar">
   {% if 'bold' in toolbar_buttons %}
     <div class="markdown-selector markdown-bold" title="{% trans 'Bold' %} (Ctrl+B)">
       <i class="fa-solid fa-bold"></i>
@@ -19,22 +19,22 @@
   {% endif %}
 
   {% if 'heading' in toolbar_buttons %}
-    <div class="ui icon button top left pointing dropdown no-border" title="{% trans 'Heading' %}">
+    <div class="group relative" title="{% trans 'Heading' %}">
       <i class="fa-solid fa-heading"></i>
-      <div class="menu">
-        <div class="item markdown-selector markdown-h1" title="">{% trans 'Heading' %} 1 (Ctrl+Alt+1)</div>
-        <div class="item markdown-selector markdown-h2" title="">{% trans 'Heading' %} 2 (Ctrl+Alt+2)</div>
-        <div class="item markdown-selector markdown-h3" title="">{% trans 'Heading' %} 3 (Ctrl+Alt+3)</div>
+      <div class="absolute hidden group-hover:block">
+        <div class="markdown-selector markdown-h1" title="">{% trans 'Heading' %} 1 (Ctrl+Alt+1)</div>
+        <div class="markdown-selector markdown-h2" title="">{% trans 'Heading' %} 2 (Ctrl+Alt+2)</div>
+        <div class="markdown-selector markdown-h3" title="">{% trans 'Heading' %} 3 (Ctrl+Alt+3)</div>
       </div>
     </div>
   {% endif %}
 
   {% if 'pre-code' in toolbar_buttons %}
-    <div class="ui icon button top left pointing dropdown no-border" title="{% trans 'Pre or Code' %}">
+    <div class="group relative" title="{% trans 'Pre or Code' %}">
       <i class="fa-solid fa-code"></i>
-      <div class="menu">
-        <div class="item markdown-selector markdown-pre" title="">{% trans 'Pre' %} (Ctrl+Alt+P)</div>
-        <div class="item markdown-selector markdown-code" title="">{% trans 'Code' %} (Ctrl+Alt+C)</div>
+      <div class="absolute hidden group-hover:block">
+        <div class="markdown-selector markdown-pre" title="">{% trans 'Pre' %} (Ctrl+Alt+P)</div>
+        <div class="markdown-selector markdown-code" title="">{% trans 'Code' %} (Ctrl+Alt+C)</div>
       </div>
     </div>
   {% endif %}
