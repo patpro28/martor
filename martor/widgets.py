@@ -72,15 +72,13 @@ class MartorWidget(forms.Textarea):
         selected_theme = get_theme()
         css = {
             "all": (
-                "plugins/css/ace.min.css",
                 "plugins/css/resizable.min.css",
                 "martor/css/martor.%s.min.css" % selected_theme,
             )
         }
         js = (
-            "plugins/js/ace.js",
-            "plugins/js/mode-markdown.js",
-            "plugins/js/ext-language_tools.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/ace/1.10.0/ace.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/ace/1.10.0/mode-markdown.min.js",
             "plugins/js/theme-github.js",
             "plugins/js/highlight.min.js",
             "plugins/js/resizable.min.js",
@@ -111,7 +109,9 @@ class MartorWidget(forms.Textarea):
         else:
             if selected_theme != 'custom':
                 js_theme = "plugins/js/%s.min.js" % selected_theme
-                js = (js_theme,).__add__(js)
+            else:
+                js_theme = "plugins/js/bootstrap.min.js"
+            js = (js_theme,).__add__(js)
 
         # 3. vendor jQUery
         if MARTOR_ALTERNATIVE_JQUERY_JS_FILE:
