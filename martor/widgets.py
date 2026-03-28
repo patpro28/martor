@@ -71,7 +71,7 @@ class MartorWidget(forms.Textarea):
     class Media:
         selected_theme = get_theme()
         if selected_theme == "tailwindcss":
-            css_asset_theme = None
+            css_asset_theme = "tailwindcss"
         else:
             css_asset_theme = (
                 selected_theme
@@ -83,7 +83,11 @@ class MartorWidget(forms.Textarea):
             if selected_theme in ["bootstrap", "semantic", "custom", "tailwindcss"]
             else "bootstrap"
         )
-        if css_asset_theme is None:
+        if selected_theme == "tailwindcss":
+            css = {
+                "all": ("martor/css/martor.tailwindcss.min.css",)
+            }
+        elif css_asset_theme is None:
             css = {}
         else:
             css = {
@@ -110,7 +114,7 @@ class MartorWidget(forms.Textarea):
 
         # support alternative vendor theme file like: bootstrap, semantic)
         # 1. vendor css theme
-        if css_asset_theme is not None:
+        if selected_theme != "tailwindcss" and css_asset_theme is not None:
             if MARTOR_ALTERNATIVE_CSS_FILE_THEME:
                 css_theme = MARTOR_ALTERNATIVE_CSS_FILE_THEME
                 css["all"] = (css_theme,).__add__(css.get("all"))
