@@ -215,9 +215,6 @@
   .sticky {
     position: sticky;
   }
-  .inset-0 {
-    inset: calc(var(--spacing) * 0);
-  }
   .start {
     inset-inline-start: var(--spacing);
   }
@@ -367,12 +364,6 @@
   }
   .max-w-\[20px\] {
     max-width: 20px;
-  }
-  .min-w-\[11rem\] {
-    min-width: 11rem;
-  }
-  .min-w-\[12rem\] {
-    min-width: 12rem;
   }
   .min-w-full {
     min-width: 100%;
