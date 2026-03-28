@@ -70,21 +70,28 @@ class MartorWidget(forms.Textarea):
 
     class Media:
         selected_theme = get_theme()
-        css_asset_theme = (
-            selected_theme if selected_theme in ["bootstrap", "semantic", "custom"]
-            else "bootstrap"
-        )
+        if selected_theme == "tailwindcss":
+            css_asset_theme = None
+        else:
+            css_asset_theme = (
+                selected_theme
+                if selected_theme in ["bootstrap", "semantic", "custom"]
+                else "bootstrap"
+            )
         js_asset_theme = (
             selected_theme
             if selected_theme in ["bootstrap", "semantic", "custom", "tailwindcss"]
             else "bootstrap"
         )
-        css = {
-            "all": (
-                "plugins/css/resizable.min.css",
-                "martor/css/martor.%s.min.css" % css_asset_theme,
-            )
-        }
+        if css_asset_theme is None:
+            css = {}
+        else:
+            css = {
+                "all": (
+                    "plugins/css/resizable.min.css",
+                    "martor/css/martor.%s.min.css" % css_asset_theme,
+                )
+            }
         js = (
             "https://cdnjs.cloudflare.com/ajax/libs/ace/1.10.0/ace.js",
             "https://cdnjs.cloudflare.com/ajax/libs/ace/1.10.0/mode-markdown.min.js",
@@ -103,13 +110,14 @@ class MartorWidget(forms.Textarea):
 
         # support alternative vendor theme file like: bootstrap, semantic)
         # 1. vendor css theme
-        if MARTOR_ALTERNATIVE_CSS_FILE_THEME:
-            css_theme = MARTOR_ALTERNATIVE_CSS_FILE_THEME
-            css["all"] = (css_theme,).__add__(css.get("all"))
-        else:
-            if css_asset_theme not in ['custom', 'tailwindcss']:
-                css_theme = "plugins/css/%s.min.css" % css_asset_theme
+        if css_asset_theme is not None:
+            if MARTOR_ALTERNATIVE_CSS_FILE_THEME:
+                css_theme = MARTOR_ALTERNATIVE_CSS_FILE_THEME
                 css["all"] = (css_theme,).__add__(css.get("all"))
+            else:
+                if css_asset_theme != 'custom':
+                    css_theme = "plugins/css/%s.min.css" % css_asset_theme
+                    css["all"] = (css_theme,).__add__(css.get("all"))
 
         # 2. vendor js theme
         if MARTOR_ALTERNATIVE_JS_FILE_THEME:
