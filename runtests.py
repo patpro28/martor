@@ -3,7 +3,7 @@ import sys
 import django
 from django.conf import settings
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 settings.configure(
     SECRET_KEY='xxxxx',
@@ -26,8 +26,8 @@ settings.configure(
     TEMPLATES=[{
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'django-markdown-editor/martor/templates'),
-            os.path.join(BASE_DIR, 'django-markdown-editor/martor/tests/templates'),
+            os.path.join(BASE_DIR, 'martor/templates'),
+            os.path.join(BASE_DIR, 'martor/tests/templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {

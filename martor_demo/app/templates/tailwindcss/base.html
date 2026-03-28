@@ -1,0 +1,61 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <title>{% block title %}Martor{% endblock %}</title>
+  <link href="{% static 'martor/css/martor.tailwindcss.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+  <style>
+    body { background: #f8fafc; color: #0f172a; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .demo-shell { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .demo-nav { background: #0f172a; color: #fff; }
+    .demo-nav a { color: inherit; text-decoration: none; }
+    .demo-nav-inner { max-width: 1100px; margin: 0 auto; padding: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .demo-brand { font-size: 1.125rem; font-weight: 700; }
+    .demo-links { display: flex; gap: .75rem; flex-wrap: wrap; }
+    .demo-link { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); padding: .55rem .9rem; border-radius: .75rem; }
+    .demo-link:hover { background: rgba(255,255,255,.16); }
+    .demo-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 1rem; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08); overflow: hidden; }
+    .demo-card-body { padding: 1.5rem; }
+    .demo-message { border-radius: .75rem; padding: .9rem 1rem; margin-bottom: 1rem; border: 1px solid #cbd5e1; background: #f8fafc; }
+    .demo-message.success { border-color: #86efac; background: #f0fdf4; color: #166534; }
+    .demo-message.error { border-color: #fca5a5; background: #fef2f2; color: #991b1b; }
+    .demo-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 .5rem; }
+    .demo-subtitle { color: #475569; margin: 0 0 1.25rem; }
+  </style>
+  {% block css %}{% endblock %}
+</head>
+<body>
+  <nav class="demo-nav">
+    <div class="demo-nav-inner">
+      <a class="demo-brand" href="/">Martor Tailwind Demo</a>
+      <div class="demo-links">
+        <a class="demo-link" href="{% url 'simple_form' %}">Simple Form</a>
+        <a class="demo-link" href="{% url 'post_form' %}">Post Form</a>
+        <a class="demo-link" href="{% url 'test_markdownify' %}">Test Markdownify</a>
+        <a class="demo-link" href="https://github.com/agusmakmun/django-markdown-editor" target="_blank">Source Code</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="demo-shell">
+    <div class="demo-card">
+      <div class="demo-card-body">
+        {% block messages %}
+          {% if messages %}
+            {% for message in messages %}
+              <div class="demo-message {% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endblock %}
+
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+  </main>
+
+  <script type="text/javascript" src="{% static 'plugins/js/jquery.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/bootstrap.min.js' %}"></script>
+  {% block js %}{% endblock %}
+</body>
+</html>

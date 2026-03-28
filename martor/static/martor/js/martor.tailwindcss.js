@@ -144,17 +144,34 @@
             });
 
             // update the preview if this menu is clicked
+            var editorPanel = $('.tab-pane#nav-editor-'+field_name);
             var currentTab = $('.tab-pane#nav-preview-'+field_name);
             var editorTabButton = $('.nav-link#nav-editor-tab-'+field_name);
             var previewTabButton = $('.nav-link#nav-preview-tab-'+field_name);
-            var toolbarButtons = $(this).closest('.tab-martor-menu').find('.martor-toolbar')
+            var toolbarButtons = $(this).closest('.tab-martor-menu').find('.martor-toolbar');
+
+            var activateEditorTab = function() {
+                editorTabButton.addClass('active').attr({'aria-selected': 'true'});
+                previewTabButton.removeClass('active').attr({'aria-selected': 'false'});
+                editorPanel.addClass('show active');
+                currentTab.removeClass('show active');
+                toolbarButtons.show();
+                editor.resize();
+            };
+
+            var activatePreviewTab = function() {
+                previewTabButton.addClass('active').attr({'aria-selected': 'true'});
+                editorTabButton.removeClass('active').attr({'aria-selected': 'false'});
+                currentTab.addClass('show active');
+                editorPanel.removeClass('show active');
+                toolbarButtons.hide();
+            };
 
             editorTabButton.click(function(){
-                // show the `.martor-toolbar` for this current editor if under preview.
-                $(this).closest('.tab-martor-menu').find('.martor-toolbar').show();
+                activateEditorTab();
             });
             previewTabButton.click(function() {
-                $(this).closest('.tab-martor-menu').find('.martor-toolbar').hide();
+                activatePreviewTab();
             });
 
             var refreshPreview = function() {
@@ -197,8 +214,6 @@
 
             if (editorConfig.living !== 'true') {
               previewTabButton.click(function(){
-                  // hide the `.martor-toolbar` for this current editor if under preview.
-                  $(this).closest('.tab-martor-menu').find('.martor-toolbar').hide();
                   refreshPreview();
               });
             }else {

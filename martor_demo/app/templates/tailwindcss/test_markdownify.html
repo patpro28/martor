@@ -1,0 +1,47 @@
+{% extends "tailwindcss/base.html" %}
+{% load static %}
+{% load martortags %}
+{% block title %}Test Markdownify :: {{ block.super }}{% endblock %}
+
+{% block css %}
+  <style>
+    .demo-preview-header { margin-bottom: 1rem; }
+    .demo-preview-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 .35rem; }
+    .demo-preview-copy { color: #475569; margin: 0; }
+    .demo-preview-shell {
+      border: 1px solid #e2e8f0;
+      border-radius: 1rem;
+      overflow: hidden;
+      background: #fff;
+    }
+    .demo-preview-bar {
+      padding: .9rem 1rem;
+      background: linear-gradient(135deg, #f8fafc, #eef2ff);
+      border-bottom: 1px solid #e2e8f0;
+      font-weight: 600;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="demo-preview-header">
+    <h1 class="demo-preview-title">{{ post.title }}</h1>
+    <p class="demo-preview-copy">Rendered output using the current `tailwindcss` Martor preview styling.</p>
+  </div>
+
+  <div class="demo-preview-shell">
+    <div class="demo-preview-bar">Markdown Output</div>
+    <div class="martor-preview">
+      {{ post.description|safe_markdown }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'plugins/js/highlight.min.js' %}"></script>
+  <script>
+    $('.martor-preview pre').each(function(i, block){
+        hljs.highlightBlock(block);
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "tailwindcss/base.html" %}
+{% load static %}
+{% block title %}{{ title }} :: {{ block.super }}{% endblock %}
+
+{% block css %}
+  <link href="{% static 'plugins/css/ace.min.css' %}" type="text/css" media="all" rel="stylesheet" />
+  <style>
+    .demo-form-title { font-size: 1.5rem; font-weight: 700; margin: 0 0 .4rem; }
+    .demo-form-copy { margin: 0 0 1.25rem; color: #475569; }
+    .demo-form { display: grid; gap: 1rem; }
+    .demo-field input[type="text"] {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: .85rem;
+      padding: .85rem 1rem;
+      background: #fff;
+      color: #0f172a;
+      outline: 0;
+    }
+    .demo-field input[type="text"]:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .12);
+    }
+    .demo-actions {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: .5rem;
+    }
+    .demo-submit {
+      border: 0;
+      border-radius: .9rem;
+      background: #111827;
+      color: #fff;
+      padding: .85rem 1.2rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .demo-submit:hover {
+      background: #312e81;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <h1 class="demo-form-title">{{ title }}</h1>
+  <p class="demo-form-copy">Use this page to validate the current `tailwindcss` theme for the Martor editor.</p>
+
+  <form class="demo-form" method="post">{% csrf_token %}
+    <div class="demo-field">
+      {{ form.title }}
+    </div>
+    <div class="demo-field">
+      {{ form.description }}
+    </div>
+    <div class="demo-field">
+      {{ form.wiki }}
+    </div>
+    <div class="demo-actions">
+      <button class="demo-submit">Save Post</button>
+    </div>
+  </form>
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{% static 'plugins/js/ace.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/mode-markdown.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/ext-language_tools.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/theme-github.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/typo.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/spellcheck.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/highlight.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/resizable.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'plugins/js/emojis.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'martor/js/martor.tailwindcss.min.js' %}"></script>
+
+  <script>
+    $('form [name="title"]').attr({
+      'placeholder': 'Post Title'
+    });
+  </script>
+{% endblock %}

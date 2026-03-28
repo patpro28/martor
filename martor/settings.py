@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 
-# Choices are: "semantic", "bootstrap"
+# Choices are: "semantic", "bootstrap", "custom", "tailwindcss"
 MARTOR_THEME = getattr(settings, "MARTOR_THEME", "bootstrap")
 
 # Global martor settings
