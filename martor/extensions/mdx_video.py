@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import markdown
-from markdown.util import etree
+from markdown.inlinepatterns import InlineProcessor
+from xml.etree import ElementTree
 
 
 class VideoExtension(markdown.Extension):
@@ -31,107 +32,106 @@ class VideoExtension(markdown.Extension):
 
     def add_inline(self, md, name, klass, re):
         pattern = klass(re)
-        pattern.md = md
         pattern.ext = self
-        md.inlinePatterns.add(name, pattern, "<reference")
+        md.inlinePatterns.register(pattern, name, 185)
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md, *args, **kwargs):
         self.add_inline(
             md,
             "dailymotion",
             Dailymotion,
-            r"([^(]|^)https?://www\.dailymotion\.com/video/(?P<dailymotionid>[a-zA-Z0-9]+)(_[\w\-]*)?",  # noqa: E501
+            r"(?<!\()https?://www\.dailymotion\.com/video/(?P<dailymotionid>[a-zA-Z0-9]+)(_[\w\-]*)?",  # noqa: E501
         )
         self.add_inline(
             md,
             "metacafe",
             Metacafe,
-            r"([^(]|^)http://www\.metacafe\.com/watch/(?P<metacafeid>\d+)/?(:?.+/?)",  # noqa: E501
+            r"(?<!\()http://www\.metacafe\.com/watch/(?P<metacafeid>\d+)/?(:?.+/?)",  # noqa: E501
         )
         self.add_inline(
             md,
             "veoh",
             Veoh,
-            r"([^(]|^)http://www\.veoh\.com/\S*(#watch%3D|watch/)(?P<veohid>\w+)",  # noqa: E501
+            r"(?<!\()http://www\.veoh\.com/\S*(#watch%3D|watch/)(?P<veohid>\w+)",  # noqa: E501
         )
         self.add_inline(
             md,
             "vimeo",
             Vimeo,
-            r"([^(]|^)http://(www.|)vimeo\.com/(?P<vimeoid>\d+)\S*",  # noqa: E501
+            r"(?<!\()http://(www.|)vimeo\.com/(?P<vimeoid>\d+)\S*",  # noqa: E501
         )
         self.add_inline(
-            md, "yahoo", Yahoo, r"([^(]|^)http://screen\.yahoo\.com/.+/?"
+            md, "yahoo", Yahoo, r"(?<!\()http://screen\.yahoo\.com/.+/?"
         )  # noqa: E501
         self.add_inline(
             md,
             "youtube",
             Youtube,
-            r"([^(]|^)https?://www\.youtube\.com/watch\?\S*v=(?P<youtubeid>\S[^&/]+)",  # noqa: E501
+            r"(?<!\()https?://www\.youtube\.com/watch\?\S*v=(?P<youtubeid>\S[^&/]+)",  # noqa: E501
         )
         self.add_inline(
             md,
             "youtube_short",
             Youtube,
-            r"([^(]|^)https?://youtu\.be/(?P<youtubeid>\S[^?&/]+)?",
+            r"(?<!\()https?://youtu\.be/(?P<youtubeid>\S[^?&/]+)?",
         )
 
 
-class Dailymotion(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
+class Dailymotion(InlineProcessor):
+    def handleMatch(self, m, data):
         url = "//www.dailymotion.com/embed/video/%s" % m.group("dailymotionid")
         width = self.ext.config["dailymotion_width"][0]
         height = self.ext.config["dailymotion_height"][0]
-        return render_iframe(url, width, height)
+        return render_iframe(url, width, height), m.start(0), m.end(0)
 
 
-class Metacafe(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
+class Metacafe(InlineProcessor):
+    def handleMatch(self, m, data):
         url = "//www.metacafe.com/embed/%s/" % m.group("metacafeid")
         width = self.ext.config["metacafe_width"][0]
         height = self.ext.config["metacafe_height"][0]
-        return render_iframe(url, width, height)
+        return render_iframe(url, width, height), m.start(0), m.end(0)
 
 
-class Veoh(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
+class Veoh(InlineProcessor):
+    def handleMatch(self, m, data):
         url = "//www.veoh.com/videodetails2.swf?permalinkId=%s" % m.group(
             "veohid"
         )  # noqa: E501
         width = self.ext.config["veoh_width"][0]
         height = self.ext.config["veoh_height"][0]
-        return flash_object(url, width, height)
+        return flash_object(url, width, height), m.start(0), m.end(0)
 
 
-class Vimeo(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
+class Vimeo(InlineProcessor):
+    def handleMatch(self, m, data):
         url = "//player.vimeo.com/video/%s" % m.group("vimeoid")
         width = self.ext.config["vimeo_width"][0]
         height = self.ext.config["vimeo_height"][0]
-        return render_iframe(url, width, height)
+        return render_iframe(url, width, height), m.start(0), m.end(0)
 
 
-class Yahoo(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
-        url = m.string + "?format=embed&player_autoplay=false"
+class Yahoo(InlineProcessor):
+    def handleMatch(self, m, data):
+        url = m.group(0) + "?format=embed&player_autoplay=false"
         width = self.ext.config["yahoo_width"][0]
         height = self.ext.config["yahoo_height"][0]
-        return render_iframe(url, width, height)
+        return render_iframe(url, width, height), m.start(0), m.end(0)
 
 
-class Youtube(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
+class Youtube(InlineProcessor):
+    def handleMatch(self, m, data):
         if self.ext.config["youtube_nocookie"][0]:
             url = "//www.youtube-nocookie.com/embed/%s" % m.group("youtubeid")
         else:
             url = "//www.youtube.com/embed/%s" % m.group("youtubeid")
         width = self.ext.config["youtube_width"][0]
         height = self.ext.config["youtube_height"][0]
-        return render_iframe(url, width, height)
+        return render_iframe(url, width, height), m.start(0), m.end(0)
 
 
 def render_iframe(url, width, height):
-    iframe = etree.Element("iframe")
+    iframe = ElementTree.Element("iframe")
     iframe.set("width", width)
     iframe.set("height", height)
     iframe.set("src", url)
@@ -141,16 +141,16 @@ def render_iframe(url, width, height):
 
 
 def flash_object(url, width, height):
-    obj = etree.Element("object")
+    obj = ElementTree.Element("object")
     obj.set("type", "application/x-shockwave-flash")
     obj.set("width", width)
     obj.set("height", height)
     obj.set("data", url)
-    param = etree.Element("param")
+    param = ElementTree.Element("param")
     param.set("name", "movie")
     param.set("value", url)
     obj.append(param)
-    param = etree.Element("param")
+    param = ElementTree.Element("param")
     param.set("name", "allowFullScreen")
     param.set("value", "true")
     obj.append(param)

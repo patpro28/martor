@@ -28,7 +28,7 @@ See LICENSE.md for details.
 
 
 import markdown
-from markdown.inlinepatterns import SimpleTagPattern
+from markdown.inlinepatterns import SimpleTagInlineProcessor
 
 
 DEL_RE = r"(\~\~)(.+?)(\~\~)"
@@ -38,11 +38,11 @@ INS_RE = r"(\+\+)(.+?)(\+\+)"
 class DelInsExtension(markdown.extensions.Extension):
     """Adds del_ins extension to Markdown class."""
 
-    def extendMarkdown(self, md, md_globals):
-        del_tag = SimpleTagPattern(DEL_RE, "del")
-        ins_tag = SimpleTagPattern(INS_RE, "ins")
-        md.inlinePatterns.add("del", del_tag, "<not_strong")
-        md.inlinePatterns.add("ins", ins_tag, "<not_strong")
+    def extendMarkdown(self, md, *args, **kwargs):
+        del_tag = SimpleTagInlineProcessor(DEL_RE, "del")
+        ins_tag = SimpleTagInlineProcessor(INS_RE, "ins")
+        md.inlinePatterns.register(del_tag, "del", 175)
+        md.inlinePatterns.register(ins_tag, "ins", 175)
 
 
 def makeExtension(*args, **kwargs):

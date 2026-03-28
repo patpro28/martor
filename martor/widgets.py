@@ -21,7 +21,7 @@ from .settings import (
 
 def get_theme():
     """function to get the selected theme"""
-    supported_themes = ["bootstrap", "semantic", "custom"]
+    supported_themes = ["bootstrap", "semantic", "custom", "tailwindcss"]
     if MARTOR_THEME in supported_themes:
         return MARTOR_THEME
     return "bootstrap"
@@ -70,10 +70,19 @@ class MartorWidget(forms.Textarea):
 
     class Media:
         selected_theme = get_theme()
+        css_asset_theme = (
+            selected_theme if selected_theme in ["bootstrap", "semantic", "custom"]
+            else "bootstrap"
+        )
+        js_asset_theme = (
+            selected_theme
+            if selected_theme in ["bootstrap", "semantic", "custom", "tailwindcss"]
+            else "bootstrap"
+        )
         css = {
             "all": (
                 "plugins/css/resizable.min.css",
-                "martor/css/martor.%s.min.css" % selected_theme,
+                "martor/css/martor.%s.min.css" % css_asset_theme,
             )
         }
         js = (
@@ -83,7 +92,7 @@ class MartorWidget(forms.Textarea):
             "plugins/js/highlight.min.js",
             "plugins/js/resizable.min.js",
             "plugins/js/emojis.min.js",
-            "martor/js/martor.%s.min.js" % selected_theme,
+            "martor/js/martor.%s.min.js" % js_asset_theme,
         )
 
         # Adding the following scripts to the end
@@ -98,8 +107,8 @@ class MartorWidget(forms.Textarea):
             css_theme = MARTOR_ALTERNATIVE_CSS_FILE_THEME
             css["all"] = (css_theme,).__add__(css.get("all"))
         else:
-            if selected_theme != 'custom':
-                css_theme = "plugins/css/%s.min.css" % selected_theme
+            if css_asset_theme not in ['custom', 'tailwindcss']:
+                css_theme = "plugins/css/%s.min.css" % css_asset_theme
                 css["all"] = (css_theme,).__add__(css.get("all"))
 
         # 2. vendor js theme
@@ -107,8 +116,8 @@ class MartorWidget(forms.Textarea):
             js_theme = MARTOR_ALTERNATIVE_JS_FILE_THEME
             js = (MARTOR_ALTERNATIVE_JS_FILE_THEME,).__add__(js)
         else:
-            if selected_theme != 'custom':
-                js_theme = "plugins/js/%s.min.js" % selected_theme
+            if js_asset_theme not in ['custom', 'tailwindcss']:
+                js_theme = "plugins/js/%s.min.js" % js_asset_theme
             else:
                 js_theme = "plugins/js/bootstrap.min.js"
             js = (js_theme,).__add__(js)

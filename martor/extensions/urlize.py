@@ -38,6 +38,9 @@ u'<p>del.icio.us</p>'
 """
 
 import markdown
+from markdown.inlinepatterns import InlineProcessor
+from markdown.util import AtomicString
+from xml.etree import ElementTree
 
 # Global Vars
 URLIZE_RE = "(%s)" % "|".join(
@@ -50,11 +53,11 @@ URLIZE_RE = "(%s)" % "|".join(
 )
 
 
-class UrlizePattern(markdown.inlinepatterns.Pattern):
+class UrlizePattern(InlineProcessor):
     """Return a link Element given an autolink (`http://example/com`)."""
 
-    def handleMatch(self, m):
-        url = m.group(2)
+    def handleMatch(self, m, data):
+        url = m.group(1)
 
         if url.startswith("<"):
             url = url[1:-1]
@@ -67,18 +70,18 @@ class UrlizePattern(markdown.inlinepatterns.Pattern):
             else:
                 url = "http://" + url
 
-        el = markdown.util.etree.Element("a")
+        el = ElementTree.Element("a")
         el.set("href", url)
-        el.text = markdown.util.AtomicString(text)
-        return el
+        el.text = AtomicString(text)
+        return el, m.start(0), m.end(0)
 
 
 class UrlizeExtension(markdown.Extension):
     """Urlize Extension for Python-Markdown."""
 
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md, *args, **kwargs):
         """Replace autolink with UrlizePattern"""
-        md.inlinePatterns["autolink"] = UrlizePattern(URLIZE_RE, md)
+        md.inlinePatterns.register(UrlizePattern(URLIZE_RE, md), "autolink", 175)
 
 
 def makeExtension(*args, **kwargs):

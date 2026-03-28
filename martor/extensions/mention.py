@@ -1,5 +1,10 @@
+from xml.etree import ElementTree
+
 import markdown
 from django.contrib.auth import get_user_model
+from markdown.inlinepatterns import InlineProcessor
+from markdown.util import AtomicString
+
 from ..settings import MARTOR_ENABLE_CONFIGS, MARTOR_MARKDOWN_BASE_MENTION_URL
 
 """
@@ -19,9 +24,9 @@ i mentioned you!</p>'
 MENTION_RE = r"(?<!\!)\@\[([^\]]+)\]"
 
 
-class MentionPattern(markdown.inlinepatterns.Pattern):
-    def handleMatch(self, m):
-        username = self.unescape(m.group(2))
+class MentionPattern(InlineProcessor):
+    def handleMatch(self, m, data):
+        username = self.unescape(m.group(1))
         users = get_user_model().objects.filter(
             username=username, is_active=True
         )  # noqa: E501
@@ -32,17 +37,21 @@ class MentionPattern(markdown.inlinepatterns.Pattern):
                 url = "{0}{1}/".format(
                     MARTOR_MARKDOWN_BASE_MENTION_URL, username
                 )  # noqa: E501
-                el = markdown.util.etree.Element("a")
+                el = ElementTree.Element("a")
                 el.set("href", url)
                 el.set("class", "direct-mention-link")
-                el.text = markdown.util.AtomicString("@" + username)
-                return el
+                el.text = AtomicString("@" + username)
+                return el, m.start(0), m.end(0)
+
+        return m.group(0), m.start(0), m.end(0)
 
 
 class MentionExtension(markdown.Extension):
-    def extendMarkdown(self, md, md_globals):
+    def extendMarkdown(self, md, *args, **kwargs):
         """Setup `mention_link` with MentionPattern"""
-        md.inlinePatterns["mention_link"] = MentionPattern(MENTION_RE, md)
+        md.inlinePatterns.register(
+            MentionPattern(MENTION_RE, md), "mention_link", 175
+        )
 
 
 def makeExtension(*args, **kwargs):
