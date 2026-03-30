@@ -85,3 +85,26 @@ class SimpleTest(TestCase):
         # xss_payload_2 = "![\" onerror=alert(1) ](x)"
         # response_2 = markdownify(xss_payload_2)
         # self.assertEqual(response_2, '')
+
+    @override_settings(
+        MARTOR_ENABLE_CONFIGS={
+            "emoji": "true",
+            "imgur": "true",
+            "mention": "false",
+            "jquery": "true",
+            "living": "false",
+            "spellcheck": "false",
+            "hljs": "true",
+        }
+    )
+    def test_markdownify_custom_extensions(self):
+        response = markdownify(
+            ":heart: ~~old~~ ++new++ https://example.com "
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        )
+
+        self.assertIn('class="marked-emoji"', response)
+        self.assertIn("<del>old</del>", response)
+        self.assertIn("<ins>new</ins>", response)
+        self.assertIn('<a href="https://example.com">https://example.com</a>', response)
+        self.assertIn("youtube.com/embed/dQw4w9WgXcQ", response)
